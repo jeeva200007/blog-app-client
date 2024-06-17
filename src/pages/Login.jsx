@@ -9,6 +9,8 @@ const Login = () => {
     password: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -23,6 +25,7 @@ const Login = () => {
   const loginUser = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_BASE_URL}/users/login`,
@@ -59,8 +62,9 @@ const Login = () => {
             autoFocus
           />
           <button type="submit" className="btn primary">
-            Login
+            {loading ? <p>Loading Please Wait...</p> : " Login "}
           </button>
+
           <small>
             Don't have an account? <Link to="/register">Register</Link>
           </small>
