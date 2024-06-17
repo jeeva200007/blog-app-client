@@ -10,10 +10,8 @@ const Login = () => {
   });
 
   const [loading, setLoading] = useState(false);
-
   const [error, setError] = useState("");
   const navigate = useNavigate();
-
   const { setCurrentUser } = useContext(UserContext);
 
   const changeInputHandler = (e) => {
@@ -31,11 +29,13 @@ const Login = () => {
         `${process.env.REACT_APP_BASE_URL}/users/login`,
         userData
       );
-      const user = await response.data;
+      const user = response.data;
       setCurrentUser(user);
       navigate("/");
+      setLoading(false);
     } catch (error) {
       setError(error.response.data.message);
+      setLoading(false); // Ensure loading state is reset on error
     }
   };
 
@@ -54,17 +54,19 @@ const Login = () => {
             autoFocus
           />
           <input
-            type="Password"
+            type="password"
             placeholder="Password"
             name="password"
             value={userData.password}
             onChange={changeInputHandler}
-            autoFocus
           />
           <button type="submit" className="btn primary">
-            {loading ? <p>Loading Please Wait...</p> : " Login "}
+            {loading && userData.email && userData.password ? (
+              <p>Loading Please Wait...</p>
+            ) : (
+              "Login"
+            )}
           </button>
-
           <small>
             Don't have an account? <Link to="/register">Register</Link>
           </small>
